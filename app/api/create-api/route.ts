@@ -36,7 +36,7 @@ const getAllKeys = async (req: NextRequest) => {
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId");
 
-    if (!userId) {
+    if (userId==='undefined') {
         return new NextResponse(JSON.stringify({ err: "Unauthorised request" }), { status: 400 });
     }
 

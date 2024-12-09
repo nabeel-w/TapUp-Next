@@ -1,5 +1,5 @@
 "use client"
-import { useRouter, useSearchParams  } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function AuthErrorPage() {
   const router = useRouter();
@@ -7,10 +7,11 @@ export default function AuthErrorPage() {
   const error = searchParams.get('error') || "Default" // Get the error type from the query parameter
 
   // Map errors to messages
-  const errorMessages:{ [key: string]: string } = {
+  const errorMessages: { [key: string]: string } = {
     Configuration: "There seems to be a configuration issue. Please contact support.",
     AccessDenied: "Access Denied! You don't have permission to access this resource.",
     Verification: "The verification link is invalid or has expired. Please try again.",
+    OAuthAccountNotLinked: "This account is not linked to your profile. Please sign in with the provider you used to create your account or link this provider in your account settings.",
     Default: "An unknown error occurred. Please try again later.",
   };
 

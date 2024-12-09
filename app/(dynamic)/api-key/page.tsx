@@ -26,12 +26,6 @@ const GenerateKeyPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
     const [keyName, setKeyName] = useState(''); // Key name input state
     const session = useSession();
-    console.log(session);
-    
-
-    if (session.status === 'unauthenticated') {
-        redirect('/auth/login')
-    }
 
     // Generate a new API key and add it to the table
     const generateApiKey = async () => {
@@ -64,7 +58,7 @@ const GenerateKeyPage = () => {
                 setKeyName(''); // Reset input
                 setIsModalOpen(false); // Close modal
             }
-        }catch (error: unknown) {
+        } catch (error: unknown) {
             if (error instanceof Error) {
                 console.error('Error fetching API keys:', error.message);
             } else {
@@ -104,7 +98,7 @@ const GenerateKeyPage = () => {
             if (msg) {
                 setKeys(keys.filter((_, i) => i !== index)); // Remove the deleted key
             }
-        }catch (error: unknown) {
+        } catch (error: unknown) {
             if (error instanceof Error) {
                 console.error('Error fetching API keys:', error.message);
             } else {
@@ -118,10 +112,10 @@ const GenerateKeyPage = () => {
             const response = await fetch(`/api/create-api?userId=${session.data?.user.id}`, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
-            });            
+            });
 
             if (!response.ok) {
-                throw new Error('Failed to fetch API keys'+response);
+                throw new Error('Failed to fetch API keys' + response);
             }
 
             const { result } = await response.json();
@@ -145,7 +139,10 @@ const GenerateKeyPage = () => {
     };
 
     useEffect(() => {
-        fetchAllKeys();
+        if (session.status === 'unauthenticated')
+            redirect('/auth/login')
+        else if (session.status === 'authenticated')
+            fetchAllKeys();
     }, [session])
 
 
@@ -199,7 +196,7 @@ const GenerateKeyPage = () => {
                                     <tr key={index} className="hover:bg-gray-700">
                                         <td className="py-3 px-4 border-b border-gray-600">{key.name}</td>
                                         <td className="py-3 px-4 border-b border-gray-600">
-                                            **** **** **** {key.key.slice(-4)|| "Invalid Key"}
+                                            **** **** **** {key.key.slice(-4) || "Invalid Key"}
                                         </td>
                                         <td className="py-3 px-4 border-b border-gray-600">{key.createdAt}</td>
                                         <td className="py-3 px-4 border-b border-gray-600">
