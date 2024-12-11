@@ -7,7 +7,7 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
 
         <main className="flex flex-row">
             <SessionProvider>
-            <Sidebar/>
+                <Sidebar />
                 {children}
             </SessionProvider>
         </main>

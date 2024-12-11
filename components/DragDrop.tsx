@@ -4,6 +4,8 @@ import { FaXmark } from 'react-icons/fa6';
 import { getFileIcon } from "./FileIcon";
 import { initWrapper, GCSUploader } from "tapup-wrapper-client";
 import { useApiKeyContext } from "@/context/apiKeyContext";
+import ErrorNotification from "./ErrorNotification";
+import UploadProgress from "./UploadProgress";
 
 
 
@@ -12,6 +14,8 @@ const DragAndDrop = () => {
     const [size, setSize] = useState<string | null>(null);
     const { activeApiKey } = useApiKeyContext();
     const [wrapper, setWrapper] = useState<GCSUploader | null>(null)
+    const [error, setError] =useState<string|null>(null);
+    const [progress, setProgress]=useState<number|null>(null);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop: (acceptedFiles) => {
@@ -21,7 +25,7 @@ const DragAndDrop = () => {
             }
         },
         multiple: false,  // Only accept one file
-        maxSize: 30 * 1024 * 1024,  // Max file size 10 MB
+        maxSize: 3 * 1024 * 1024 * 1024,  // Max file size 3GB
     });
 
     const handleRemoveFile = () => {
@@ -39,22 +43,29 @@ const DragAndDrop = () => {
     };
 
     const handleFileUpload = async () => {
-        const onProgress = (progress: number) => {
-            console.log(`Upload Progress: ${progress}%`);
+        const onProgress = (prog: number) => {
+            console.log(`Upload Progress: ${prog}%`);
+            setProgress(prog);
         };
-        if(!file || !wrapper) return;
+        if(!file || !wrapper){
+            setError("File or API Key Not Selected")
+            return;
+        } 
+            
         try {
             const result = await wrapper.uploadFileWithProgress(file, file?.name, onProgress);
             if (result.success) {
                 console.log(result.message);
               } else {
-                console.error(result.message);
+                throw new Error(result.message);
               }
         }  catch (error: unknown) {
             if (error instanceof Error) {
               console.log(error.message); // Safe to access 'message' on the error
+              setError(error.message);
             } else {
               console.log("An unknown error occurred");
+              setError("An unknown error occurred");
             }
           }
     }
@@ -68,6 +79,8 @@ const DragAndDrop = () => {
 
     return (
         <>
+        {progress && <UploadProgress progress={progress} setProgress={setProgress}/>}
+        {error && <ErrorNotification message={error} setError={setError}/>}
             <div
                 className={`${isDragActive ? "bg-gray-700 border-2 border-blue-400" : "bg-gray-800"
                     } rounded-lg min-w-96 h-96 flex items-center justify-center border-2 border-dashed border-gray-600 px-10`}

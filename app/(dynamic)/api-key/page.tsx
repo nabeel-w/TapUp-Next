@@ -5,17 +5,12 @@ import KeyModal from '@/components/KeyModal';
 import { FaXmark } from 'react-icons/fa6';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
+import { useApiKeyContext } from '@/context/apiKeyContext';
 
 interface APIkey {
     name: string;
     key: string;
     createdAt: string;
-}
-interface apiKeys {
-    name: string;
-    apiKey: string;
-    createdAt: Date;
-    userId: string;
 }
 
 
@@ -26,6 +21,7 @@ const GenerateKeyPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
     const [keyName, setKeyName] = useState(''); // Key name input state
     const session = useSession();
+    const { apiKeys } = useApiKeyContext();
 
     // Generate a new API key and add it to the table
     const generateApiKey = async () => {
@@ -107,42 +103,11 @@ const GenerateKeyPage = () => {
         }
     };
 
-    const fetchAllKeys = async () => {
-        try {
-            const response = await fetch(`/api/create-api?userId=${session.data?.user.id}`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch API keys' + response);
-            }
-
-            const { result } = await response.json();
-
-            if (result) {
-                const formattedKeys = result.map((key: apiKeys) => ({
-                    name: key.name,
-                    key: key.apiKey,
-                    createdAt: new Date(key.createdAt).toLocaleString(),
-                }));
-
-                setKeys(formattedKeys);
-            }
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                console.error('Error fetching API keys:', error.message);
-            } else {
-                console.error('Unknown error occurred:', error);
-            }
-        }
-    };
-
     useEffect(() => {
         if (session.status === 'unauthenticated')
             redirect('/auth/login')
-        else if (session.status === 'authenticated')
-            fetchAllKeys();
+        else if(session.status === 'authenticated')
+            setKeys([...apiKeys]);
     }, [session])
 
 

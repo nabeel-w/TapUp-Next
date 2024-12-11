@@ -28,7 +28,6 @@ export const ApiKeyProvider = ({ children }: { children: ReactNode }) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const session = useSession();
-    console.log(session);
 
     // Function to fetch API keys from the server
     const fetchAllKeys = async () => {

@@ -1,20 +1,41 @@
+import { useUserPlan } from "@/context/userPlanContext";
+
 export default function StorageUsage() {
   // Static data for demonstration purposes
-  const totalStorage = 10; // in GB
-  const usedStorage = 6;   // in GB
-  const remainingStorage = totalStorage - usedStorage;
+  const { userPlan, loading, error } = useUserPlan();
 
-  const usagePercentage = (usedStorage / totalStorage) * 100;
+  if (loading) {
+    return (
+      <div className="relative top-64 left-4  h-full">
+        <p className="text-white bg-gray-800 px-4 py-2 rounded-md shadow-md">Loading...</p>
+      </div>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div className="relative top-64 left-4  h-full">
+        <p className="text-red-500 bg-gray-800 px-4 py-2 rounded-md shadow-md">
+          Error: {error}
+        </p>
+      </div>
+    );
+  }
+  const totalStorage = (userPlan?.storageSize ?? 10)// in GB
+  const usedStorage = (userPlan?.storageUsed ?? '6');   // in GB
+  const remainingStorage = (totalStorage - parseFloat(usedStorage)).toFixed(2);
+
+  const usagePercentage = ((parseInt(usedStorage) / totalStorage) * 100);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center p-4 pt-16">
+    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center p-4 pt-64">
       <div className="bg-gray-800 rounded-lg shadow-lg p-8 w-96">
         <h2 className="text-2xl font-semibold text-center mb-6">Storage Usage</h2>
 
         {/* Storage info */}
         <div className="flex justify-between mb-4">
           <span className="text-gray-400">Used:</span>
-          <span>{usedStorage} GB</span>
+          <span>{parseFloat(usedStorage).toFixed(2)} GB</span>
         </div>
         <div className="flex justify-between mb-4">
           <span className="text-gray-400">Total:</span>
@@ -29,7 +50,7 @@ export default function StorageUsage() {
         <div className="relative pt-1">
           <div className="flex mb-2 items-center justify-between">
             <span className="text-gray-400">Storage Usage</span>
-            <span>{Math.round(usagePercentage)}%</span>
+            <span>{usagePercentage}%</span>
           </div>
           <div className="flex mb-4">
             <div className="w-full bg-gray-700 rounded-full">

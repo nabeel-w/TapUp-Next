@@ -4,6 +4,10 @@ import {
   text,
   primaryKey,
   integer,
+  serial,
+  numeric,
+  bigint,
+  varchar,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
 
@@ -65,11 +69,51 @@ export const apiKeys = pgTable("apiKeys",
     name: text("name").notNull(),
     createdAt: timestamp("createdAt", { mode: "date" }).notNull(),
     userId: text("userId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
 
   },
-  (vt)=>({
+  (vt) => ({
     compundKey: primaryKey({ columns: [vt.apiKey, vt.userId] }),
+  })
+);
+
+export const subscriptions = pgTable('subscriptions', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(), // Subscription name
+  price: numeric('price', { precision: 10, scale: 2 }).notNull(), // Price of the subscription
+  durationMonths: integer('duration_months').notNull(), // Duration of the subscription in months
+  description: text('description'), // Optional description
+  storageSize: integer('storage_size').notNull(), //Size in GB
+});
+
+export const userSubscriptions = pgTable('user_subscriptions', {
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: "cascade" }), // Foreign key to users table
+  subscriptionId: serial('subscription_id').notNull().references(() => subscriptions.id, { onDelete: "cascade" }), // Foreign key to subscriptions table
+  startDate: timestamp('start_date', { mode: 'date' }).notNull(), // Subscription start date
+  endDate: timestamp('end_date', { mode: 'date' }), // Subscription end date (null if ongoing)
+  storageUsed: numeric('storage_used').notNull().default('0'), //Size in GB
+},
+  (vt) => ({
+    compundKey: primaryKey({ columns: [vt.userId, vt.subscriptionId] }),
+  }));
+
+export const fileMetaData = pgTable('file_metadata', {
+  objectId: text('object_id').notNull().unique(),
+  name: text('name').notNull(),
+  generation: bigint('generation', { mode: 'bigint' }).notNull(),
+  metageneration: bigint('metageneration', { mode: 'bigint' }).notNull(),
+  contentType: text('contentType').notNull(),
+  md5hash: text('md5_hash').notNull(),
+  selfLink: text('self_link').notNull(), // Link to the object metadata
+  mediaLink: text('media_link').notNull(), // Link to download the object
+  timeCreated: timestamp('time_created', { mode: 'string' }).notNull(),
+  updated: timestamp('updated', { mode: 'string' }).notNull(),
+  size: bigint('size', { mode: 'bigint' }).notNull(),
+  ownerId: text('owner_id').notNull().references(() => users.id, { onDelete: "cascade" }),
+  permission: varchar('permission', { length: 7 }).notNull().default('private'),
+},
+  (vt) => ({
+    compundKey: primaryKey({ columns: [vt.ownerId, vt.objectId] }),
   })
 );
