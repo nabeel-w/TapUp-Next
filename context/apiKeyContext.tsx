@@ -72,13 +72,15 @@ export const ApiKeyProvider = ({ children }: { children: ReactNode }) => {
     return (
         <ApiKeyContext.Provider value={{ apiKeys, activeApiKey, setActiveApiKey }}>
             {loading ? (
-                <div className="flex justify-center items-center h-screen bg-gray-900 text-white">
-                    <span className="text-lg">Loading...</span>
+                <div className="relative top-4 left-4  h-full">
+                    <p className="text-white bg-gray-800 px-4 py-2 rounded-md shadow-md">Loading...</p>
                 </div>
             ) : error ? (
-                <div className="flex justify-center items-center h-screen bg-gray-900 text-white">
-                    <span className="text-lg">Error loading API keys: {error}</span>
-                </div>
+                <div className="relative top-4 left-4  h-full">
+                <p className="text-red-500 bg-gray-800 px-4 py-2 rounded-md shadow-md">
+                    Error: {error}
+                </p>
+            </div>
             ) : (
                 children
             )}

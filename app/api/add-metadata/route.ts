@@ -10,7 +10,7 @@ interface MetaData {
     generation: bigint; // Unique identifier for the version of the file
     metageneration: bigint; // Version of metadata for the file
     contentType: string; // MIME type of the file
-    md5Hash: string; // MD5 hash of the file content
+    md5hash: string; // MD5 hash of the file content
     selfLink: string; // URL to access file metadata
     mediaLink: string; // URL to download the file
     timeCreated: string; // Timestamp when the file was created (ISO 8601 format)
@@ -27,7 +27,15 @@ interface userPlan {
     endDate: Date | null;
 };
 
+const pubSubToken = process.env.PUBSUB_JOB_SECRET;
+
 const setMetaData = async (req: NextRequest) => {
+    const token = req.headers.get('x-pubsub-token');
+    if (!token)
+        return new NextResponse(JSON.stringify({ err: "Missing Pub/Sub Token" }), { status: 400 });
+    if (token !== pubSubToken)
+        return new NextResponse(JSON.stringify({ err: "Unauthorised request" }), { status: 400 });
+
     const { fileMetaData }: { fileMetaData: MetaData } = await req.json();
     if (!fileMetaData) return new NextResponse(JSON.stringify({ err: "Invalid request" }), { status: 400 });
     const fileSizeInGB = Number(fileMetaData.size) / (1024 * 1024 * 1024);

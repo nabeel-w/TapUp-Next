@@ -1,45 +1,16 @@
 import { useUserPlan } from "@/context/userPlanContext";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  image: string;
-}
 
-interface UserCardProps {
-  user?: User;
-}
 
-export default function UserCard({ user }: UserCardProps) {
-  const defaultUser: User = {
-    id: "0",
-    name: "Guest User",
-    email: "guest@example.com",
-    image: "/images/user.png",
-  };
+export default function UserCard() {
 
-  const displayUser = user || defaultUser;
+  const displayUser = useSession().data?.user;
   const { userPlan, loading, error } = useUserPlan();
 
-  if (loading) {
-    return (
-      <div className="relative top-64 left-4  h-full">
-        <p className="text-white bg-gray-800 px-4 py-2 rounded-md shadow-md">Loading...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="relative top-64 left-4  h-full">
-        <p className="text-red-500 bg-gray-800 px-4 py-2 rounded-md shadow-md">
-          Error: {error}
-        </p>
-      </div>
-    );
-  }
+  if (loading || !displayUser) return;
+  if (error) return;
 
   return (
     <div className="min-h-screen bg-gray-900 text-white relative">

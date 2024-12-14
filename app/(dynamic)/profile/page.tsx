@@ -15,12 +15,10 @@ const ProfilePage = () => {
         }
     }, [session])
     return (
-        <>
-            <UserPlanProvider userId={session.data?.user.id}>
-                <UserCard user={session.data?.user} />
-                <StorageUsage />
-            </UserPlanProvider>
-        </>
+        <UserPlanProvider>
+            <UserCard />
+            <StorageUsage />
+        </UserPlanProvider>
     );
 };
 

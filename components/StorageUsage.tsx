@@ -6,7 +6,7 @@ export default function StorageUsage() {
 
   if (loading) {
     return (
-      <div className="relative top-64 left-4  h-full">
+      <div className="relative top-4 left-4  h-full">
         <p className="text-white bg-gray-800 px-4 py-2 rounded-md shadow-md">Loading...</p>
       </div>
     );
@@ -14,7 +14,7 @@ export default function StorageUsage() {
   
   if (error) {
     return (
-      <div className="relative top-64 left-4  h-full">
+      <div className="relative top-4 left-4  h-full">
         <p className="text-red-500 bg-gray-800 px-4 py-2 rounded-md shadow-md">
           Error: {error}
         </p>
@@ -25,7 +25,7 @@ export default function StorageUsage() {
   const usedStorage = (userPlan?.storageUsed ?? '6');   // in GB
   const remainingStorage = (totalStorage - parseFloat(usedStorage)).toFixed(2);
 
-  const usagePercentage = ((parseInt(usedStorage) / totalStorage) * 100);
+  const usagePercentage = ((parseFloat(usedStorage) / totalStorage) * 100).toFixed(2);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center p-4 pt-64">
@@ -39,7 +39,7 @@ export default function StorageUsage() {
         </div>
         <div className="flex justify-between mb-4">
           <span className="text-gray-400">Total:</span>
-          <span>{totalStorage} GB</span>
+          <span>{totalStorage.toFixed(2)} GB</span>
         </div>
         <div className="flex justify-between mb-6">
           <span className="text-gray-400">Remaining:</span>

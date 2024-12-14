@@ -57,11 +57,11 @@ const DragAndDrop = () => {
             if (result.success) {
                 console.log(result.message);
               } else {
-                throw new Error(result.message);
+                setError(result.message.error);
               }
         }  catch (error: unknown) {
             if (error instanceof Error) {
-              console.log(error.message); // Safe to access 'message' on the error
+              console.log(error); // Safe to access 'message' on the error
               setError(error.message);
             } else {
               console.log("An unknown error occurred");
