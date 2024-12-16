@@ -1,7 +1,9 @@
 "use client"
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function AuthErrorPage() {
+
+ function AuthError() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const error = searchParams.get('error') || "Default" // Get the error type from the query parameter
@@ -31,4 +33,13 @@ export default function AuthErrorPage() {
       </div>
     </div>
   );
+}
+
+export default function AuthErrorPage() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <AuthError />
+    </Suspense>
+  )
 }

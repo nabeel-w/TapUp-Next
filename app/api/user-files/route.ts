@@ -19,9 +19,11 @@ interface MetaData {
     ownerId: string; // Identifier for the owner of the file
 };
 
-const jsonBigIntReplacer = (key, value) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const jsonBigIntReplacer = (key: string, value: any): any => {
     return typeof value === "bigint" ? value.toString() : value;
 };
+
 
 
 const getUserFiles = async (req: NextRequest) => {

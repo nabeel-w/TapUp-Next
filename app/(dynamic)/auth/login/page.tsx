@@ -1,16 +1,16 @@
 "use client"
 import { useRouter, useSearchParams  } from "next/navigation";
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import SigninBtnCustom from "@/components/SigninBtnCustom";
 
-const LoginPage = () => {
+const Login = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
   
   useEffect(() => {
     if (error) {
-      router.push(`/auth/error?error=${error}`);
+      router.push(`/error?error=${error}`);
     }
   }, [error, router]);
 
@@ -29,4 +29,10 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default function LoginPage(){
+  return (
+      <Suspense>
+        <Login />
+      </Suspense>
+    )
+};

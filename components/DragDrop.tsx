@@ -57,7 +57,7 @@ const DragAndDrop = () => {
             if (result.success) {
                 console.log(result.message);
               } else {
-                setError(result.message.error);
+                setError(result.message);
               }
         }  catch (error: unknown) {
             if (error instanceof Error) {
