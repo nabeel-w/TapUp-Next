@@ -47,7 +47,7 @@ export default function HomePage() {
             <div className="flex justify-end mb-6 ms-auto">
                 <SearchBar />
             </div>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                 {files && files.length > 0 ? (
                     files.map((file, index) => (
                         <FileItem
