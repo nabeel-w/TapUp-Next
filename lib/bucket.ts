@@ -1,9 +1,6 @@
-import { Storage, StorageOptions } from '@google-cloud/storage';
-import { getServiceAccount } from '@/utils/generateCredential';
+import { Storage } from '@google-cloud/storage';
 
-const token = getServiceAccount();
-const options: StorageOptions = { token: token }
-const storage = new Storage(options);
+const storage = new Storage();
 const bucketName = 'tap-up-bucket';
 const bucket = storage.bucket(bucketName);
 

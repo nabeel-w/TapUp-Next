@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "tapup-443906",
+  "private_key_id": "50169a8bf0f20cf7083e0fe0c94f935dff6fa635",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCpM6kOlHWxcTGb\nWzcZ2xX6+3lFxX5s4fa092IThQ822N7kRrj5KWS1q75QQ1vBsrAlOB3kubakdvxG\ndqlmSDpO/bauQ3QFhJvxkR1ZY5mThbIot8CW5xTbGZeL7MyLlJ2REMvxoHBVMdou\nIEPrb2eJBV3FXDZbfJkHIjPwlkgAal1MQujA5/uFnX3LulqaYxmPKmZnUY9Qtn23\ndSXPokHWlkgH9uDRC6oIM0GBQ1DohdyL0vD6pVea9vkrtivy5e6jnfRxvBy1+L35\nNXDLL6TuHMZkMOpO8j5dBqccV24szF3wo8EGHJ8/f5IK+nV7+BBL1UOi0gGq/LDC\nbEHGIS77AgMBAAECggEAG/9IgSPvSOIA14LjiQY3oAoouh2gj+tgk0zUhYQAt/kb\nrJcdOAacO56u74CtzU0VbhstKxx7DGyvIrOzemayK0GPuaG/WsMOELiL1tovCSTY\nDXprm4H3cVJN7AvN7ryzySiyg7P3UnQyH2wcVk0z9bgVw43rZVOmeJ01Y0u39Jq1\naxCrshSf14H9IAy2MlxUfXG127f9PtdV7IwViYaUJmdLxmoz1YdyHM8o3PfVPLHS\nifwzq58oNogInHX2HmXmQdsh8VXDBDc1bNgyUQ7PnsExlC/byiOmiq9KLzMrxmOu\nGZ/dk8vKZ5N5njDDks2P9+lZ6jTTk4a8b6nNsCt+8QKBgQDW5VQQTD8uMTvA+M9F\n4RMpi/4MzEEv22pbayOJc+8kh4vtBhPHyuskV029zYilL0CDfq6Z8RxUXYhHVw5x\nR7JY3M9KjB9UkveHOzLu0/kHuIZ+lj8lYjXle16Ke4HKel78nK8I56HrTyQ7PRo6\nwR13EgRSVyckJnGJM2AfvwTYSwKBgQDJkNx0DWzyrEuAHP1W1oSCoknlJjpT3Ptp\nMHNJ0Cu1IHf+p7VRTUfBBYaWA6eLTXSgowCdYAEjPi6YCjzgmdWFyNoWHuv+xKdF\narB7FQWxIdkUtKWZ7aRfsCsSXADeYgm/FJ5lFb1qef9MTI4B3tb99k/TyQcPckmx\nWCezpC02EQKBgQCNRb356OYwK9WoiulYexrp2Upuh2jjWU+WQdze5AR281UdwT0H\nv3LONUa6XIBUd7flukZ2lXeWTtbkb2rjNcsdeCweSffe1a88i8J0F45DcR+Z4JQq\ns2HTN0NzrrYoskH3t9mp9P0RgLnE5+pybbo9KO8GYp0suskw9UFgHWfF+QKBgEF9\n7gNPMW0QCmAQC0ih3uBLNtNbvmvtS0r8URlUqD7r09FMUJ+gCoZu8zHe8htTCWgA\nTnzT6sq2s5D3Epyvny8e+a1iUq+u2eK2La1wQS8ynkQaBgyjqFrm9Le8aRPYqu4J\nFwYlMCxeg1MZNLLq4tQVqg5YLREZw1P6HrxBxebhAoGAWOM1d596PnY35UQOe0LH\nfdjAF/+DDV2QEsxsd+lg2HjwtD/1Lj04eF6xUaqw+Cm/RraXJt49YKaNs48Gp9i0\nz/PVuxP1LO5seI2CFuG7uucuqSqDezcIjwNBZad8QJzzDEjkGK2d0d1zXEHlqrwP\niIYnjMsCoT4dQgRM8DeYkvE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "tapupadmin@tapup-443906.iam.gserviceaccount.com",
+  "client_id": "106534336751143436249",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/tapupadmin%40tapup-443906.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
