@@ -46,5 +46,5 @@ const mimeTypeToIcon: Record<MimeType, IconType> = {
 // Utility function to return an icon based on file mime type
 export const getFileIcon = (mimeType: string) => {
   const IconComponent = mimeTypeToIcon[mimeType as MimeType] || FaFile; // Cast mimeType to MimeType
-  return <IconComponent className="text-4xl text-gray-500" />;
+  return <IconComponent className="me-2 text-xl text-gray-500" />;
 };
