@@ -66,8 +66,8 @@ export default function TableRow({ file }: { file: MetaData }) {
     const [error, setError] = useState<string | null>(null);
     const { activeApiKey } = useApiKeyContext();
     const { files, setFiles } = useUserFiles();
-    const fileName = file.name.split('/')[0];
-
+    const fileName = file.name.split('/')[1];
+    
     const handleDelete = async () => {
         if (activeApiKey && files) {
             const wrapper = initWrapper(activeApiKey);

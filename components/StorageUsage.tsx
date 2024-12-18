@@ -6,7 +6,7 @@ export default function StorageUsage() {
 
   if (loading) {
     return (
-      <div className="relative top-4 left-4  h-full">
+      <div className="relative top-4 left-4 h-full">
         <p className="text-white bg-gray-800 px-4 py-2 rounded-md shadow-md">Loading...</p>
       </div>
     );
