@@ -38,6 +38,7 @@ const deleteMetaData = async (req: NextRequest) => {
         }
         userPlan[0].storageUsed = (parseFloat(userPlan[0].storageUsed) - fileSizeInGB).toFixed(2);
         await redis.unlink(`file_meta_data_${objectId}`);
+        await redis.unlink(`objectTags_${objectId}`);
         await redis.set(`userPlan_${ownerId}`, JSON.stringify(userPlan[0]));
         await db.update(userSubscriptions).set({ storageUsed: userPlan[0].storageUsed }).where(eq(userSubscriptions.userId, ownerId));
         await db.delete(fileMetaData).where(eq(fileMetaData.objectId, objectId));
