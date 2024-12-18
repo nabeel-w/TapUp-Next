@@ -25,7 +25,7 @@ const FileTable = () => {
         });
     };
 
-    const filteredFiles = filterFilesByTagsAndName(search)
+    const filteredFiles = filterFilesByTagsAndName(search);
 
     return (
         <>
