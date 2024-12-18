@@ -1,5 +1,5 @@
 import { useSession } from 'next-auth/react';
-import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import React, { createContext, ReactNode, useContext, useEffect, useState, useMemo, useCallback } from 'react';
 
 type UserPlan = {
   subscriptionName: string;
@@ -23,7 +23,8 @@ export const UserPlanProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [error, setError] = useState<string | null>(null);
   const session = useSession();
 
-  const fetchUserPlan = async () => {
+  // Memoizing fetchUserPlan using useCallback to avoid unnecessary re-creations
+  const fetchUserPlan = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(`/api/user-plan?userId=${session.data?.user.id}`);
@@ -45,15 +46,19 @@ export const UserPlanProvider: React.FC<{ children: ReactNode }> = ({ children }
     } finally {
       setLoading(false);
     }
-  };
+  }, [session.data?.user.id]);
 
   useEffect(() => {
-    if (session.status === 'authenticated')
+    if (session.status === 'authenticated') {
       fetchUserPlan();
-  }, [session]);
+    }
+  }, [session.status, fetchUserPlan]);
+
+  // Memoizing context value to prevent unnecessary re-renders
+  const contextValue = useMemo(() => ({ userPlan, loading, error }), [userPlan, loading, error]);
 
   return (
-    <UserPlanContext.Provider value={{ userPlan, loading, error }}>
+    <UserPlanContext.Provider value={contextValue}>
       {children}
     </UserPlanContext.Provider>
   );
