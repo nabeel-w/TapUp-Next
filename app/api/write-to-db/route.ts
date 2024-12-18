@@ -28,8 +28,11 @@ const PROCESSED_KEYS_SET = 'processed_file_meta_data_keys';
 const PROCESSED_TAGS_SET = 'processed_object_tags';
 
 const insertToDb = async (req: NextRequest) => {
-    if (req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
-        return new NextResponse(JSON.stringify({ err: "Unauthorised request" }), { status: 401 });
+    const authHeader = req.headers.get('authorization');
+    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+        return new Response('Unauthorized', {
+            status: 401,
+        });
     }
 
     try {
