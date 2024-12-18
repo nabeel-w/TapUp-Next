@@ -24,16 +24,13 @@ interface objectTags {
     objectId: string;
 }
 
-const cronJobSecretToken = process.env.CRON_JOB_SECRET;
 const PROCESSED_KEYS_SET = 'processed_file_meta_data_keys';
 const PROCESSED_TAGS_SET = 'processed_object_tags';
 
 const insertToDb = async (req: NextRequest) => {
-    const cronToken = req.headers.get('x-cron-job-token');
-    if (!cronToken)
-        return new NextResponse(JSON.stringify({ err: "Missing Cron Job Token" }), { status: 400 });
-    if (cronToken !== cronJobSecretToken)
-        return new NextResponse(JSON.stringify({ err: "Unauthorised request" }), { status: 400 });
+    if (req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
+        return new NextResponse(JSON.stringify({ err: "Unauthorised request" }), { status: 401 });
+    }
 
     try {
         const keys = await redis.keys('file_meta_data_*');
