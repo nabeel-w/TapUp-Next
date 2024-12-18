@@ -117,3 +117,13 @@ export const fileMetaData = pgTable('file_metadata', {
     compundKey: primaryKey({ columns: [vt.ownerId, vt.objectId] }),
   })
 );
+
+export const fileTags = pgTable('file_tags', {
+  objectId: text('object_id').notNull().unique().references(() => fileMetaData.objectId, { onDelete: 'cascade' }),
+  ownerId: text('owner_id').notNull().references(() => users.id, { onDelete: "cascade" }),
+  tags: text('tags').array().notNull(),
+},
+  (vt) => ({
+    compundKey: primaryKey({ columns: [vt.ownerId, vt.objectId] }),
+  })
+)

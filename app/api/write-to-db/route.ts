@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { redis } from "@/lib/redis";
-import { fileMetaData } from "@/lib/schema";
+import { fileMetaData, fileTags } from "@/lib/schema";
 import { NextRequest, NextResponse } from "next/server";
 
 interface MetaData {
@@ -18,8 +18,15 @@ interface MetaData {
     ownerId: string; // Identifier for the owner of the file
 };
 
+interface objectTags {
+    tags: string[];
+    userId: string;
+    objectId: string;
+}
+
 const cronJobSecretToken = process.env.CRON_JOB_SECRET;
-const PROCESSED_KEYS_SET = 'processed_file_meta_data_keys'; 
+const PROCESSED_KEYS_SET = 'processed_file_meta_data_keys';
+const PROCESSED_TAGS_SET = 'processed_object_tags';
 
 const insertToDb = async (req: NextRequest) => {
     const cronToken = req.headers.get('x-cron-job-token');
@@ -30,6 +37,7 @@ const insertToDb = async (req: NextRequest) => {
 
     try {
         const keys = await redis.keys('file_meta_data_*');
+        await insertKeysToDb();
 
         if (keys.length === 0) {
             console.log('No file meta data or userPlan data found in cache');
@@ -37,12 +45,12 @@ const insertToDb = async (req: NextRequest) => {
         }
 
         const processedKeys = await redis.smembers(PROCESSED_KEYS_SET);
-        let keysToProcess:string[];
-        if(processedKeys.length!==0){
+        let keysToProcess: string[];
+        if (processedKeys.length !== 0) {
             keysToProcess = keys.filter(key => !processedKeys.includes(key));
         }
-        else{
-            keysToProcess=keys;
+        else {
+            keysToProcess = keys;
         }
 
         if (keysToProcess.length === 0) {
@@ -75,9 +83,8 @@ const insertToDb = async (req: NextRequest) => {
 
         try {
             await db.insert(fileMetaData).values(bulkInsertData);
-            keysToProcess.forEach(async key=>await redis.sadd(PROCESSED_KEYS_SET, key))
+            keysToProcess.forEach(async key => await redis.sadd(PROCESSED_KEYS_SET, key))
             console.log('Bulk insertion completed successfully');
-            
 
             return new NextResponse(JSON.stringify({ msg: 'Bulk insertion completed successfully' }), { status: 200 });
         } catch (error) {
@@ -88,6 +95,42 @@ const insertToDb = async (req: NextRequest) => {
     } catch (error) {
         console.error('Error inserting file metadata into DB:', error);
         return new NextResponse(JSON.stringify({ err: `Server Error: ${error}` }), { status: 500 });
+    }
+}
+
+const insertKeysToDb = async () => {
+    const tagKeys = await redis.keys('objectTags_*');
+    if (tagKeys.length === 0) return;
+    const processedTagKeys = await redis.smembers(PROCESSED_TAGS_SET);
+    let keysToProcess: string[];
+    if (processedTagKeys.length !== 0) {
+        keysToProcess = tagKeys.filter(key => !processedTagKeys.includes(key));
+    }
+    else {
+        keysToProcess = tagKeys;
+    }
+    if (keysToProcess.length === 0) return;
+
+    const objectTagsPromise = keysToProcess.map(async (key) => {
+        const data: objectTags | null = await redis.get(key);
+        return data || {} as objectTags;
+    });
+
+    const allObjectTagData = await Promise.all(objectTagsPromise);
+    const bulkInsertKeyData = allObjectTagData.map(key => {
+        return {
+            objectId: key.objectId,
+            ownerId: key.userId,
+            tags: key.tags,
+        }
+    });
+    try {
+        await db.insert(fileTags).values(bulkInsertKeyData);
+        keysToProcess.forEach(async key => await redis.sadd(PROCESSED_TAGS_SET, key))
+        return;
+    } catch (error) {
+        console.log(error);
+        return;
     }
 }
 
