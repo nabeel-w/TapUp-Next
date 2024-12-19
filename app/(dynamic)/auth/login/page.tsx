@@ -2,7 +2,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from 'react';
 import SigninBtnCustom from "@/components/SigninBtnCustom";
-import { SessionProvider, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 const Login = () => {
   const router = useRouter();
@@ -46,9 +46,7 @@ const Login = () => {
 export default function LoginPage() {
   return (
     <Suspense>
-      <SessionProvider>
         <Login />
-      </SessionProvider>
     </Suspense>
   )
 };

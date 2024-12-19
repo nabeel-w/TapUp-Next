@@ -1,31 +1,51 @@
 // components/FileTable.tsx
 import { useUserFiles } from "@/context/userFilesContext";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import TableRow from "./TableRow";
 import { FaSearch } from "react-icons/fa";
 import { useUserFilesTags } from "@/context/userFileTagsContext";
+
+interface TagMap {
+    [key: string]: string[];
+}
 
 const FileTable = () => {
     const [search, setSearch] = useState("");
     const { files } = useUserFiles();
     const { fileTags } = useUserFilesTags();
 
-    const filterFilesByTagsAndName = (search: string) => {
-        return files?.filter((file) => {
-            const fileTag = fileTags?.find((tag) => tag.objectId === file.objectId);
-            const tagMatches = fileTag?.tags.some((tag) =>
-                tag.toLowerCase().includes(search.toLowerCase())
-            );
-
-            // Filter by name and/or tags
-            return (
-                file.name.toLowerCase().includes(search.toLowerCase()) ||
-                tagMatches
-            );
+    const tagMap = useMemo(() => {
+        const map: TagMap = {};
+        fileTags?.forEach((tagObj) => {
+            map[tagObj.objectId] = tagObj.tags;
         });
-    };
+        return map;
+    }, [fileTags]);
 
-    const filteredFiles = filterFilesByTagsAndName(search);
+    const filterFilesByTagsAndName = useCallback(() => {
+        const lowerSearch = search.toLowerCase();
+
+        return files?.filter((file) => {
+            // Get tags for the current file using the memoized hash map
+            const fileTags = tagMap[file.objectId] || [];
+
+            // Check if the file name matches the search
+            const nameMatches = file.name.toLowerCase().includes(lowerSearch);
+
+            // Check if any tag matches the search
+            const tagMatches = fileTags.some((tag) =>
+                tag.toLowerCase().includes(lowerSearch)
+            );
+
+            // Return true if either name or tags match
+            return nameMatches || tagMatches;
+        });
+    }, [files, tagMap, search]);
+
+    // Step 3: Call the filter function and render the results
+    const filteredFiles = useMemo(() => filterFilesByTagsAndName(), [
+        filterFilesByTagsAndName,
+    ]);
 
     return (
         <>

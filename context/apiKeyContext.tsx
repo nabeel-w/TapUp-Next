@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
+import React, { createContext, useState, useContext, ReactNode, useEffect, useCallback, useMemo } from "react";
 
 type ApiKey = {
     key: string;
@@ -30,7 +30,7 @@ export const ApiKeyProvider = ({ children }: { children: ReactNode }) => {
     const session = useSession();
 
     // Function to fetch API keys from the server
-    const fetchAllKeys = async () => {
+    const fetchAllKeys = useCallback(async () => {
         try {
             const response = await fetch(`/api/create-api?userId=${session.data?.user.id}`, {
                 method: "GET",
@@ -61,26 +61,28 @@ export const ApiKeyProvider = ({ children }: { children: ReactNode }) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [session.data?.user.id])
 
     useEffect(() => {
         if (session.status === "authenticated") {
             fetchAllKeys();  // Run fetch only if the session is authenticated
         }
-    }, [session]); // Call fetchAllKeys on component mount
+    }, [session, fetchAllKeys]); // Call fetchAllKeys on component mount
+
+    const contextValue = useMemo(()=>({ apiKeys, activeApiKey, setActiveApiKey }), [apiKeys, activeApiKey]);
 
     return (
-        <ApiKeyContext.Provider value={{ apiKeys, activeApiKey, setActiveApiKey }}>
+        <ApiKeyContext.Provider value={contextValue}>
             {loading ? (
                 <div className="relative top-4 left-4  h-full">
                     <p className="text-white bg-gray-800 px-4 py-2 rounded-md shadow-md">Loading...</p>
                 </div>
             ) : error ? (
                 <div className="relative top-4 left-4  h-full">
-                <p className="text-red-500 bg-gray-800 px-4 py-2 rounded-md shadow-md">
-                    Error: {error}
-                </p>
-            </div>
+                    <p className="text-red-500 bg-gray-800 px-4 py-2 rounded-md shadow-md">
+                        Error: {error}
+                    </p>
+                </div>
             ) : (
                 children
             )}

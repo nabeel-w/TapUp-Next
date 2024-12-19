@@ -1,59 +1,66 @@
 import { useSession } from "next-auth/react";
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState, useMemo, useCallback } from "react";
 
 interface FileTags {
-    tags: string[];
-    userId: string;
-    objectId: string;
+  tags: string[];
+  userId: string;
+  objectId: string;
 }
 
-interface userFileTagsContextType {
-    fileTags: FileTags[] | null;
+interface UserFileTagsContextType {
+  fileTags: FileTags[] | null;
 }
 
-const UserFilesTagsContext = createContext<userFileTagsContextType | undefined>(undefined);
+const UserFilesTagsContext = createContext<UserFileTagsContextType | undefined>(undefined);
 
 export const UserFilesTagsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [filesTags, setFilesTags] = useState<FileTags[] | null>(null);
-    const session = useSession();
+  const [filesTags, setFilesTags] = useState<FileTags[] | null>(null);
+  const session = useSession();
 
-    const fetchUserFilesTags = async () => {
-        try {
-            const response = await fetch(`/api/user-tags?userId=${session.data?.user.id}`);
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to fetch user plan');
-            }
-            const data = await response.json();
-            setFilesTags([...data]);
-
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                console.log(err.message);
-                setFilesTags(null);
-            } else {
-                console.log('Failed to fetch user plan');
-                setFilesTags(null);
-            }
-        }
+  // Memoize fetchUserFilesTags function
+  const fetchUserFilesTags = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/user-tags?userId=${session.data?.user.id}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to fetch user tags");
+      }
+      const data = await response.json();
+      setFilesTags([...data]);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err.message);
+        setFilesTags(null);
+      } else {
+        console.error("Failed to fetch user tags");
+        setFilesTags(null);
+      }
     }
+  }, [session.data?.user.id]);
 
-    useEffect(() => {
-        if (session.status === 'authenticated')
-            fetchUserFilesTags();
-    }, [session])
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      fetchUserFilesTags();
+    }
+  }, [session.status, fetchUserFilesTags]);
 
-    return (
-        <UserFilesTagsContext.Provider value={{ fileTags:filesTags }}>
-            {children}
-        </UserFilesTagsContext.Provider>
-    )
-}
+  // Memoize the context value
+  const contextValue = useMemo(
+    () => ({ fileTags: filesTags }),
+    [filesTags]
+  );
+
+  return (
+    <UserFilesTagsContext.Provider value={contextValue}>
+      {children}
+    </UserFilesTagsContext.Provider>
+  );
+};
 
 export const useUserFilesTags = () => {
-    const context = useContext(UserFilesTagsContext);
-    if (!context) {
-        throw new Error('useUserFiles must be used within a UserFilesProvider');
-    }
-    return context;
+  const context = useContext(UserFilesTagsContext);
+  if (!context) {
+    throw new Error("useUserFilesTags must be used within a UserFilesTagsProvider");
+  }
+  return context;
 };
