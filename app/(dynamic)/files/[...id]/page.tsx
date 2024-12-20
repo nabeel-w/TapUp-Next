@@ -62,8 +62,7 @@ async function getFileTags(id: string): Promise<ObjectTags> {
 
 export default async function FilePage({ params }: { params: Promise<{ id: string[] }> }) {
     const id = (await params).id;
-    const objectId = `${id[0]}/${id[1]}/${id[2]}/${id[3]}`;
-    console.log(objectId);
+    const objectId = decodeURIComponent(`${id[0]}/${id[1]}/${id[2]}/${id[3]}`);
     const metadata = await getFileMetadata(objectId);
     const tags = await getFileTags(objectId);
 
@@ -114,7 +113,7 @@ export default async function FilePage({ params }: { params: Promise<{ id: strin
                         <div className="mb-4">
                             <dt className="font-medium text-gray-400">Self Link</dt>
                             <dd className="mt-1 text-sm">
-                                <a href={metadata.selfLink} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                                <a href={metadata.selfLink} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline text-wrap">
                                     {metadata.selfLink}
                                 </a>
                             </dd>
@@ -122,7 +121,7 @@ export default async function FilePage({ params }: { params: Promise<{ id: strin
                         <div className="mb-4">
                             <dt className="font-medium text-gray-400">Media Link</dt>
                             <dd className="mt-1 text-sm">
-                                <a href={metadata.mediaLink} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                                <a href={metadata.mediaLink} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline text-wrap">
                                     {metadata.mediaLink}
                                 </a>
                             </dd>
