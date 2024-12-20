@@ -70,6 +70,22 @@ const DragAndDrop = () => {
           }
     }
 
+    function formatFileName(filePath: string, maxLength: number = 20): string {
+        // Extract the file name after the last "/"
+        const fileName = filePath.split("/").pop() || "";
+    
+        // Separate the name and extension
+        const [name, extension] = fileName.split(/\.([^.]*)$/); // Regex to split name and extension
+    
+        // Check if the name needs truncation
+        if (name.length > maxLength) {
+            return `${name.substring(0, maxLength)}....${extension}`;
+        }
+    
+        // Return the full name if it's within the limit
+        return fileName;
+    }
+
     useEffect(() => {
         if (activeApiKey) {
           const initializedWrapper = initWrapper(activeApiKey);
@@ -96,7 +112,7 @@ const DragAndDrop = () => {
                     {file && (
                         <div className="mt-4 text-gray-300 flex flex-row gap-2 items-center justify-center">
                             {getFileIcon(file.type)} {/* Display the file icon based on mime type */}
-                            <p>File: {file.name}</p>
+                            <p>File: {formatFileName(file.name)}</p>
                             <p>Size: {size}</p>
                             <button
                                 className="text-red-500 flex flex-row gap-2 items-center"

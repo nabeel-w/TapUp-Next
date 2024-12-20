@@ -1,13 +1,13 @@
 import { useApiKeyContext } from '@/context/apiKeyContext';
 import React, { useState } from 'react'
 import { FaTrash } from 'react-icons/fa';
-import { LuSquareArrowUpRight } from 'react-icons/lu';
 import ErrorNotification from './ErrorNotification';
 import ApiKeySelector from './apiKeySelector';
 import { RiCloseLargeLine } from 'react-icons/ri';
 import { initWrapper } from 'tapup-wrapper-client';
 import { useUserFiles } from '@/context/userFilesContext';
 import { getFileIcon } from './FileIcon';
+import { redirect } from 'next/navigation';
 
 interface MetaData {
     objectId: string; // Unique identifier for the file
@@ -58,7 +58,7 @@ function formatDate(dateString: string) {
 
 function formatTime(dateString: string) {
     const date = new Date(dateString);
-    return date.toLocaleTimeString();
+    return date.toLocaleTimeString("en-IN");
 }
 
 export default function TableRow({ file }: { file: MetaData }) {
@@ -111,7 +111,8 @@ export default function TableRow({ file }: { file: MetaData }) {
                 </div>
             </div>}
             <tr
-                className="border-b bg-gray-800 border-gray-700 hover:bg-gray-700"
+                className="border-b bg-gray-800 border-gray-700 hover:bg-gray-700 select-none"
+                onClick={()=>redirect(`/files/${file.objectId}`)}
             >
                 <td className="px-4 py-2 flex items-center">{getFileIcon(file.contentType)}{formatFileName(file.name)}</td>
                 <td className="px-4 py-2">{formatFileSize(file.size)}</td>
@@ -120,9 +121,6 @@ export default function TableRow({ file }: { file: MetaData }) {
                 <td className="px-4 py-2">{formatDate(file.timeCreated)}</td>
                 <td className="px-4 py-2">{formatTime(file.timeCreated)}</td>
                 <td className="px-4 py-2">
-                    <button className="px-3 py-1 text-sm bg-indigo-600 hover:bg-indigo-500 text-white rounded-md">
-                        <LuSquareArrowUpRight />
-                    </button>
                     <button onClick={() => setModal(true)} className="px-3 py-1 text-sm bg-red-600 hover:bg-red-500 text-white rounded-md ml-2">
                         <FaTrash />
                     </button>
