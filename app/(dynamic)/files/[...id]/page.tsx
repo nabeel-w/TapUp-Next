@@ -60,7 +60,7 @@ async function getFileTags(id: string): Promise<ObjectTags> {
     else return tags;
 }
 
-export default async function FilePage({ params }: { params: { id: string[] } }) {
+export default async function FilePage({ params }: { params: Promise<{ id: string[] }> }) {
     const id = (await params).id;
     const objectId = `${id[0]}/${id[1]}/${id[2]}/${id[3]}`;
     console.log(objectId);
