@@ -69,17 +69,19 @@ export const ApiKeyProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [session, fetchAllKeys]); // Call fetchAllKeys on component mount
 
-    const contextValue = useMemo(()=>({ apiKeys, activeApiKey, setActiveApiKey }), [apiKeys, activeApiKey]);
+    const contextValue = useMemo(() => ({ apiKeys, activeApiKey, setActiveApiKey }), [apiKeys, activeApiKey]);
 
     return (
         <ApiKeyContext.Provider value={contextValue}>
             {loading ? (
-                <div className="relative top-4 left-4  h-full">
-                    <p className="text-white bg-gray-800 px-4 py-2 rounded-md shadow-md">Loading...</p>
+                <div className="relative h-full flex items-center justify-center p-4 left-10 sm:top-4 sm:left-4">
+                    <p className="text-white bg-gray-800 px-4 py-2 rounded-md shadow-md text-sm sm:text-base">
+                        Loading...
+                    </p>
                 </div>
             ) : error ? (
-                <div className="relative top-4 left-4  h-full">
-                    <p className="text-red-500 bg-gray-800 px-4 py-2 rounded-md shadow-md">
+                <div className="relative h-full flex items-center justify-center p-4 left-10 sm:top-4 sm:left-4">
+                    <p className="text-red-500 bg-gray-800 px-4 py-2 rounded-md shadow-md text-sm sm:text-base">
                         Error: {error}
                     </p>
                 </div>

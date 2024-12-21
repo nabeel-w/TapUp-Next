@@ -13,7 +13,6 @@ interface APIkey {
     createdAt: string;
 }
 
-
 const GenerateKeyPage = () => {
     const [apiKey, setApiKey] = useState('');
     const [isCopied, setIsCopied] = useState(false);
@@ -63,7 +62,6 @@ const GenerateKeyPage = () => {
         }
     };
 
-
     // Copy key to clipboard
     const copyToClipboard = () => {
         navigator.clipboard.writeText(apiKey);
@@ -104,39 +102,43 @@ const GenerateKeyPage = () => {
     };
 
     useEffect(() => {
-        if (session.status === 'unauthenticated')
-            redirect('/auth/login')
-        else if(session.status === 'authenticated')
-            setKeys([...apiKeys]);
-    }, [session])
-
+        if (session.status === 'unauthenticated') redirect('/auth/login');
+        else if (session.status === 'authenticated') setKeys([...apiKeys]);
+    }, [session]);
 
     return (
-        <div className="flex-1 p-8">
-            <h1 className="text-3xl font-bold mb-6">Generate API Key</h1>
-            <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-                <p className="text-gray-400 mb-4">
+        <div className="flex-1 p-4 md:p-8">
+            <h1 className="text-2xl md:text-3xl font-bold mb-6 text-center md:text-left">
+                Generate API Key
+            </h1>
+            <div className="bg-gray-800 p-4 md:p-6 rounded-lg shadow-lg">
+                <p className="text-gray-400 mb-4 text-center md:text-left">
                     Generate a new API key for uploading your files. Keep it secure and do not share it publicly.
                 </p>
-                <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-md transition-all"
-                >
-                    Generate Key
-                </button>
+                <div className="flex justify-center md:justify-start">
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-md transition-all"
+                    >
+                        Generate Key
+                    </button>
+                </div>
 
                 {apiKey && (
                     <div className="mt-6">
-                        <p className="text-gray-300 mb-2">Your API Key:</p>
-                        <div className="flex items-center bg-gray-700 p-4 rounded-md">
-                            <span className="text-gray-200 break-all">{apiKey}</span>
+                        <p className="text-gray-300 mb-2 text-center md:text-left">Your API Key:</p>
+                        <div className="flex flex-wrap items-center bg-gray-700 p-4 rounded-md gap-2">
+                            <span className="text-gray-200 break-all flex-1">{apiKey}</span>
                             <button
                                 onClick={copyToClipboard}
-                                className="ml-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-all"
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-all"
                             >
                                 {isCopied ? 'Copied!' : 'Copy'}
                             </button>
-                            <button className='mx-auto text-red-500 hover:text-red-600' onClick={() => setApiKey('')}>
+                            <button
+                                className="text-red-500 hover:text-red-600"
+                                onClick={() => setApiKey('')}
+                            >
                                 <FaXmark size={20} />
                             </button>
                         </div>
@@ -144,50 +146,64 @@ const GenerateKeyPage = () => {
                 )}
 
                 {/* Table Component */}
-                <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-                    <h2 className="text-2xl font-bold mb-4">Your API Keys</h2>
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="bg-gray-700">
-                                <th className="py-3 px-4 border-b border-gray-600">Key Name</th>
-                                <th className="py-3 px-4 border-b border-gray-600">API Key</th>
-                                <th className="py-3 px-4 border-b border-gray-600">Created At</th>
-                                <th className="py-3 px-4 border-b border-gray-600">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {keys.length > 0 ? (
-                                keys.map((key, index) => (
-                                    <tr key={index} className="hover:bg-gray-700">
-                                        <td className="py-3 px-4 border-b border-gray-600">{key.name}</td>
-                                        <td className="py-3 px-4 border-b border-gray-600">
-                                            **** **** **** {key.key.slice(-4) || "Invalid Key"}
-                                        </td>
-                                        <td className="py-3 px-4 border-b border-gray-600">{key.createdAt}</td>
-                                        <td className="py-3 px-4 border-b border-gray-600">
-                                            <button
-                                                onClick={() => deleteKey(index)}
-                                                className="text-red-500 hover:text-red-600"
-                                            >
-                                                <FaTrashAlt />
-                                            </button>
+                <div className="bg-gray-800 mt-6 rounded-lg shadow-lg">
+                    <h2 className="text-xl md:text-2xl font-bold mb-4">Your API Keys</h2>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                                <tr className="bg-gray-700">
+                                    <th className="py-3 px-4 border-b border-gray-600">Key Name</th>
+                                    <th className="py-3 px-4 border-b border-gray-600">API Key</th>
+                                    <th className="py-3 px-4 border-b border-gray-600">Created At</th>
+                                    <th className="py-3 px-4 border-b border-gray-600">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {keys.length > 0 ? (
+                                    keys.map((key, index) => (
+                                        <tr key={index} className="hover:bg-gray-700">
+                                            <td className="py-3 px-4 border-b border-gray-600">
+                                                {key.name}
+                                            </td>
+                                            <td className="py-3 px-4 border-b border-gray-600">
+                                                **** **** ****{' '}
+                                                {key.key.slice(-4) || 'Invalid Key'}
+                                            </td>
+                                            <td className="py-3 px-4 border-b border-gray-600">
+                                                {key.createdAt}
+                                            </td>
+                                            <td className="py-3 px-4 border-b border-gray-600">
+                                                <button
+                                                    onClick={() => deleteKey(index)}
+                                                    className="text-red-500 hover:text-red-600"
+                                                >
+                                                    <FaTrashAlt />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td
+                                            className="py-3 px-4 text-center text-gray-400 border-b border-gray-600"
+                                            colSpan={4}
+                                        >
+                                            No API Keys generated yet.
                                         </td>
                                     </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td
-                                        className="py-3 px-4 text-center text-gray-400 border-b border-gray-600"
-                                        colSpan={4}
-                                    >
-                                        No API Keys generated yet.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                {isModalOpen && (<KeyModal keyName={keyName} setIsModalOpen={setIsModalOpen} generateApiKey={generateApiKey} setKeyName={setKeyName} />)}
+                {isModalOpen && (
+                    <KeyModal
+                        keyName={keyName}
+                        setIsModalOpen={setIsModalOpen}
+                        generateApiKey={generateApiKey}
+                        setKeyName={setKeyName}
+                    />
+                )}
             </div>
         </div>
     );

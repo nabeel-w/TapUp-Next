@@ -15,17 +15,13 @@ export default function HomePage() {
     }
 
     if (loading) {
-        return (
-            <div className="relative top-4 left-4  h-full">
-                <p className="text-white bg-gray-800 px-4 py-2 rounded-md shadow-md">Loading...</p>
-            </div>
-        );
+        return null;
     }
 
     if (error) {
         return (
-            <div className="relative top-4 left-4  h-full">
-                <p className="text-red-500 bg-gray-800 px-4 py-2 rounded-md shadow-md">
+            <div className="relative h-full w-1/3 sm:w-2/12 p-4 sm:top-4 sm:left-4">
+                <p className="text-red-500 bg-gray-800 px-4 py-2 rounded-md shadow-md text-sm sm:text-base">
                     Error: {error}
                 </p>
             </div>
@@ -34,7 +30,7 @@ export default function HomePage() {
 
     return (
         <div className="flex-1 mx-auto bg-gray-900 text-white justify-center mt-10">
-            <FileTable/>      
+            <FileTable />
         </div>
     );
 }

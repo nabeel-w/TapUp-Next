@@ -3,7 +3,6 @@ import { useSession } from "next-auth/react";
 import DownloadButton from "./DownloadButton";
 import Link from "next/link";
 
-
 interface Metadata {
     objectId: string;
     name: string;
@@ -46,7 +45,7 @@ export default function DisplayFile({ metadata, tags }: DisplayFileProps) {
 
     if (status === "loading") {
         return (
-            <div className="relative top-4 left-4  h-full">
+            <div className="relative top-4 left-4 h-full">
                 <p className="text-white bg-gray-800 px-4 py-2 rounded-md shadow-md">Loading...</p>
             </div>
         )
@@ -55,7 +54,7 @@ export default function DisplayFile({ metadata, tags }: DisplayFileProps) {
     const isAuthorized = session?.user.id === metadata.name.split('/')[0] || metadata.permission === 'public'
     if (!isAuthorized) {
         return (
-            <div className="min-h-screen bg-gray-900 relative mx-auto mt-10">
+            <div className="min-h-screen bg-gray-900 flex items-center justify-center">
                 <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
                     <h2 className="text-2xl font-bold mb-4 text-white">Not Authorized</h2>
                     <p className="text-gray-300 mb-4">Sorry, you don&apos;t have permission to access this page.</p>
@@ -68,14 +67,14 @@ export default function DisplayFile({ metadata, tags }: DisplayFileProps) {
     }
 
     return (
-        <div className="min-h-screen bg-gray-900 text-gray-100 p-8">
+        <div className="min-h-screen bg-gray-900 text-gray-100 p-6">
             <div className="max-w-4xl mx-auto">
                 <h1 className="text-3xl font-bold mb-8">File Details</h1>
                 <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
                     {tags.tags.length > 0 && (
                         <div className="bg-gray-800 rounded-lg shadow-lg p-4 mb-10">
                             <h2 className="text-xl font-semibold mb-4">Tags</h2>
-                            <div className="flex flex-wrap gap-2 ms-4">
+                            <div className="flex flex-wrap gap-2">
                                 {tags.tags.map((tag, index) => (
                                     <span key={index} className="px-3 py-1 bg-blue-600 text-xs rounded-full">
                                         {tag}
@@ -86,14 +85,14 @@ export default function DisplayFile({ metadata, tags }: DisplayFileProps) {
                     )}
                     <h2 className="text-2xl font-semibold mb-4">Metadata</h2>
                     <DownloadButton fileName={metadata.name} />
-                    <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="mb-4">
                             <dt className="font-medium text-gray-400">Object ID</dt>
-                            <dd className="mt-1 text-sm">{metadata.objectId}</dd>
+                            <dd className="mt-1 text-sm break-words">{metadata.objectId}</dd>
                         </div>
                         <div className="mb-4">
                             <dt className="font-medium text-gray-400">Name</dt>
-                            <dd className="mt-1 text-sm">{metadata.name.split('/')[1]}</dd>
+                            <dd className="mt-1 text-sm break-words">{metadata.name.split('/')[1]}</dd>
                         </div>
                         <div className="mb-4">
                             <dt className="font-medium text-gray-400">Generation</dt>
@@ -114,7 +113,7 @@ export default function DisplayFile({ metadata, tags }: DisplayFileProps) {
                         <div className="mb-4">
                             <dt className="font-medium text-gray-400">Self Link</dt>
                             <dd className="mt-1 text-sm">
-                                <a href={metadata.selfLink} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline text-wrap">
+                                <a href={metadata.selfLink} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline break-words">
                                     {metadata.selfLink}
                                 </a>
                             </dd>
@@ -122,7 +121,7 @@ export default function DisplayFile({ metadata, tags }: DisplayFileProps) {
                         <div className="mb-4">
                             <dt className="font-medium text-gray-400">Media Link</dt>
                             <dd className="mt-1 text-sm">
-                                <a href={metadata.mediaLink} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline text-wrap">
+                                <a href={metadata.mediaLink} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline break-words">
                                     {metadata.mediaLink}
                                 </a>
                             </dd>

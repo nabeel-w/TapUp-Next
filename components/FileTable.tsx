@@ -98,9 +98,10 @@ const FileTable = () => {
 
     return (
         <>
-            <div className="p-6 bg-gray-900 text-white rounded-lg">
+            <div className="p-4 lg:p-6 bg-gray-900 text-white rounded-lg">
                 {/* Search Bar */}
-                <div className="mb-4 w-60 ms-auto relative">
+                <div className="flex justify-between items-center mb-4">
+                <div className="relative w-full lg:w-1/3">
                     <input
                         type="text"
                         placeholder="Search files..."
@@ -110,6 +111,7 @@ const FileTable = () => {
                     />
                     <FaSearch className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 </div>
+            </div>
 
                 {/* Table */}
                 <div className="overflow-x-auto">

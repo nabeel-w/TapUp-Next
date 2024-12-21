@@ -8,11 +8,13 @@ export default function Layout({ children }: Readonly<{ children: React.ReactNod
 
     return (
         <>
-        {session.status==='unauthenticated' && <Navbar/>}
-        <main className="flex min-h-max bg-gray-900 text-white">
-            {session.status==='authenticated' && <Sidebar/>}
-            {children}
-        </main>
+            {session.status === 'unauthenticated' && <Navbar />}
+            <main className="flex min-h-screen bg-gray-900 text-white">
+                {session.status === 'authenticated' && (<Sidebar />)}
+                <div className="flex-1 p-4 sm:p-6">
+                    {children}
+                </div>
+            </main>
         </>
     );
 }

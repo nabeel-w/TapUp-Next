@@ -67,7 +67,7 @@ export default function TableRow({ file }: { file: MetaData }) {
     const { activeApiKey } = useApiKeyContext();
     const { files, setFiles } = useUserFiles();
     const fileName = file.name.split('/')[1];
-    
+
     const handleDelete = async () => {
         if (activeApiKey && files) {
             const wrapper = initWrapper(activeApiKey);
@@ -112,20 +112,28 @@ export default function TableRow({ file }: { file: MetaData }) {
             </div>}
             <tr
                 className="border-b bg-gray-800 border-gray-700 hover:bg-gray-700 select-none"
-                onClick={()=>redirect(`/files/${file.objectId}`)}
             >
-                <td className="px-4 py-2 flex items-center">{getFileIcon(file.contentType)}{formatFileName(file.name)}</td>
+                <td className="px-4 py-2 flex items-center" onClick={() => redirect(`/files/${file.objectId}`)}>
+                    {getFileIcon(file.contentType)}
+                    <span className="truncate">{formatFileName(file.name)}</span>
+                </td>
                 <td className="px-4 py-2">{formatFileSize(file.size)}</td>
-                <td className="px-4 py-2">{`v${parseFloat(file.metageneration.toString()).toFixed(1)}`}</td>
+                <td className="px-4 py-2">{`v${parseFloat(file.metageneration.toString()).toFixed(
+                    1
+                )}`}</td>
                 <td className="px-4 py-2">{file.contentType}</td>
                 <td className="px-4 py-2">{formatDate(file.timeCreated)}</td>
                 <td className="px-4 py-2">{formatTime(file.timeCreated)}</td>
                 <td className="px-4 py-2">
-                    <button onClick={() => setModal(true)} className="px-3 py-1 text-sm bg-red-600 hover:bg-red-500 text-white rounded-md ml-2">
+                    <button
+                        onClick={() => setModal(true)}
+                        className="px-3 py-1 text-sm bg-red-600 hover:bg-red-500 text-white rounded-md ml-2"
+                    >
                         <FaTrash />
                     </button>
                 </td>
             </tr>
+
         </>
     )
 }
